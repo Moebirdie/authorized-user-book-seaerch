@@ -12,10 +12,6 @@ const resolvers = {
     user: async (parent, { username }) => {
       return User.findOne({ username }).populate('savedBooks');
     },
-    savedBooks: async (parent, { username }) => {
-      const params = username ? { username }: {};
-      return bookSchema.find(params).sort({createdAt: -1 });
-    },
     me: async (parent, { context }) => {
       if (context.user) {
         return User.findOne({_id: context.user._id}).populate('savedBooks');
@@ -39,14 +35,14 @@ const resolvers = {
       
       const correctPswd = await user.isCorrectPassword(password);
       if (!correctPswd) {
-        throw AuthenticationError;
+        throw AuthenicationError;
       }
 
       const token = signToken(user);
 
       return { token, user };
     },
-    addSavedBooks: async (parent, { savedBookId }, context) => {
+    addSavedBooks: async (parent, { bookId }, context) => {
       if (context.user) {
         const savedBooks = await Book.create({
           authors,
@@ -60,24 +56,24 @@ const resolvers = {
         
         await User.findOneAndUpdate(
           {_id: context.user_id },
-          { $addToSet: {savedBooks: book._id}}
+          { $addToSet: {savedBooks: savedBooks.bookId}}
           );
 
         return book;  
       }
-      throw AuthenticationError;
+      throw AuthenicationError;
       ('you need to be logged in!');
     },
 
      removeSavedBooks: async (parent, {savedBooksId }, context) => {
       if (context.user) {
-        const savedBook = await Book.findOneAndDelete(
-          { _id: savedBooksId},
+        const savedBooks = await Book.findOneAndDelete(
+          { bookId: savedBooksId},
         );
       
         await User.fineOneAndUpdate(
           { _id: context.user._id },
-          { $pull: { savedBooks: book._id}}
+          { $pull: { savedBooks: savedBooks.bookId}}
           );
         
         return book;  
