@@ -7,14 +7,14 @@ const resolvers = {
   Query: 
   {
     users: async () => {
-      return User.find().populate('savedBooks');
+      return await User.find().populate('savedBooks');
     },
     user: async (parent, { username }) => {
-      return User.findOne({ username }).populate('savedBooks');
+      return await User.findOne({ username }).populate('savedBooks');
     },
     me: async (parent, { context }) => {
       if (context.user) {
-        return User.findOne({_id: context.user._id}).populate('savedBooks');
+        return await User.findOne({_id: context.user._id}).populate('savedBooks');
       }
       throw new AuthenicationError('You need to be logged in!');
     },
