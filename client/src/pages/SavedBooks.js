@@ -16,11 +16,7 @@ import Auth from '../utils/auth';
 const SavedBooks = async () => {
   const [userData, setUserData] = useState([]);
 const { loading, error, data } = useQuery(QUERY_ME);
-useEffect(() => {
-  if (data && data.me) {
-    setUserData(data.me);
-  }
-}, [data]);
+
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const [removeSavedBook] = useMutation(REMOVE_SAVEDBOOKS);
@@ -52,9 +48,9 @@ const handleAddBook = async () => {
     console.error(err);
   };
   //if data isn't here yet, say so
-  // if (!userDataLength) {
-  //   return <h2>LOADING...</h2>;
-  // }
+  if (!userDataLength) {
+    return <h2>LOADING...</h2>;
+  }
 };
   return (
     <>

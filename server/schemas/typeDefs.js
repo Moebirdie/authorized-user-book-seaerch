@@ -5,13 +5,13 @@ type User {
   username: String!
   email: String!
   savedBooks: [Book]
+  bookCount: Int
 }
 
   type Book {
     _id: ID
     authors: [String]
     description: String!
-    createdAt: String
     bookId: String!
     image: String
     link: String
@@ -33,8 +33,18 @@ type User {
     createUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
     addSavedBooks(bookId: String!): User
-    removeSavedBooks(userId: ID!, bookId: String!): User
+    removeSavedBooks(bookId: String!): User
   }
+
+  input BookInput {
+    authors: [String]!
+    description: String!
+    title: String!
+    bookId: String!
+    image: String
+    link: String
+  }
+
 `;
 
 module.exports = typeDefs;
