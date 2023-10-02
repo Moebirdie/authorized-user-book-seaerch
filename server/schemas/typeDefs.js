@@ -1,18 +1,17 @@
-//example typedefs file
+// String, Int, Float, ID, boolean
 const typeDefs = `
 type User {
   _id: ID
   username: String!
   email: String!
-  password: String!
   savedBooks: [Book]
+  bookCount: Int
 }
 
   type Book {
     _id: ID
     authors: [String]
     description: String!
-    createdAt: String
     bookId: String!
     image: String
     link: String
@@ -25,18 +24,27 @@ type User {
   }
 
   type Query {
-    users: [User]!
-    user(username: String!): User
-    savedBooks(username: String!): User   
-    me(username: String!): Auth 
+    users: [User]
+    user(_id: ID!): User
+    me: User 
   }
 
   type Mutation {
     createUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-    addSavedBooks(userId: ID!, bookId: String!): User
-    removeSavedBooks(userId: ID!, bookId: String!): User
+    addSavedBooks(bookId: String!): User
+    removeSavedBooks(bookId: String!): User
   }
+
+  input BookInput {
+    authors: [String]!
+    description: String!
+    title: String!
+    bookId: String!
+    image: String
+    link: String
+  }
+
 `;
 
 module.exports = typeDefs;

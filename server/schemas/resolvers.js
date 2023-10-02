@@ -1,7 +1,8 @@
 //example of a resolvers file
 const { User } = require('../models');
-const bookSchema = require('../models/Book');
-const { signToken, AuthenicationError } = require('../utils/auth');
+const bookSchema = require('../models/Book')
+const { signToken, AuthenticationError } = require('../utils/auth');
+
 
 const resolvers = {
   Query: 
@@ -9,14 +10,14 @@ const resolvers = {
     users: async () => {
       return await User.find().populate('savedBooks');
     },
-    user: async (parent, { username }) => {
-      return await User.findOne({ username }).populate('savedBooks');
+    user: async (parent,{ _id }) => {
+      return User.findOne( { _id} ).populate('savedBooks');
     },
-    me: async (parent, { context }) => {
+    me: async (parent, args, context ) => {
       if (context.user) {
         return await User.findOne({_id: context.user._id}).populate('savedBooks');
       }
-      throw new AuthenicationError('You need to be logged in!');
+      throw new AuthenticationError('You need to be logged in!');
     },
   },
 
@@ -28,46 +29,39 @@ const resolvers = {
     },
     login: async (parent, { email, password }) => {
       const user = await User.findOne({email});
-      
+      console.log(user);
       if (!user) {
-        throw AuthenicationError;
+        throw AuthenticationError;
       }
       
       const correctPswd = await user.isCorrectPassword(password);
+      console.log(correctPswd);
       if (!correctPswd) {
-        throw AuthenicationError;
+        throw AuthenticationError;
       }
 
       const token = signToken(user);
-
+      console.log(user);
       return { token, user };
     },
-    addSavedBooks: async (parent, { bookId }, context) => {
+   addSavedBooks: async (parent, { saveBookData }, context) => {
+
       if (context.user) {
-        const savedBooks = await Book.create({
-          authors,
-          description,
-          createdAt,
-          bookId,
-          image,
-          link,
-          title,
-        });
-        
+        const savedBook = await bookSchema.create(saveBookData);
+               
         await User.findOneAndUpdate(
           {_id: context.user_id },
-          { $addToSet: {savedBooks: savedBooks.bookId}}
+          { $addToSet: {savedBooks: savedBook}}
           );
 
-        return book;  
+        return savedBook;  
       }
-      throw AuthenicationError;
-      ('you need to be logged in!');
+      throw AuthenticationError;
     },
 
      removeSavedBooks: async (parent, {savedBooksId }, context) => {
       if (context.user) {
-        const savedBooks = await Book.findOneAndDelete(
+        const savedBooks = await bookSchema.findOneAndDelete(
           { bookId: savedBooksId},
         );
       
