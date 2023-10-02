@@ -11,7 +11,7 @@ const LoginForm = (props) => {
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
 //  const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [login, data] = useMutation(LOGIN_USER);
+  const [login, { data }] = useMutation(LOGIN_USER);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -54,7 +54,7 @@ const LoginForm = (props) => {
     event.preventDefault();
     console.log(userFormData);
     try {
-      const data  = await login({
+      const { data } = await login({
         variables: { ...userFormData },
       });
 

@@ -37,7 +37,6 @@ export const ADD_SAVEDBOOKS = gql`
       title
       }
     }
-  }
 `;
 
 export const REMOVE_SAVEDBOOKS = gql`
@@ -46,5 +45,4 @@ export const REMOVE_SAVEDBOOKS = gql`
       bookId
       }
     }
-  }
 `;
